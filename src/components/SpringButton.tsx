@@ -67,7 +67,7 @@ export default function SpringButton({
       onPointerUp={handlePointerUp}
       onPointerLeave={handlePointerLeave}
       onPointerCancel={handlePointerCancel}
-      {...(props as any)}
+      {...(props as React.ComponentProps<typeof motion.button>)}
     >
       {children}
     </motion.button>

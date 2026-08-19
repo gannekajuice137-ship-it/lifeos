@@ -16,7 +16,6 @@ import type {
   HabitLog,
   GateTopic,
   GateTopicPayload,
-  CfEntry,
   CfEntryItem,
   CfContestPayload,
   CfProblemPayload,
