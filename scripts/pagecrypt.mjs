@@ -5,7 +5,7 @@
 
 import { readFileSync, writeFileSync, readdirSync, statSync } from "fs";
 import { join, extname } from "path";
-import { createCipheriv, createHash, randomBytes } from "crypto";
+import { createCipheriv, pbkdf2Sync, randomBytes } from "crypto";
 import { dirname } from "path";
 import { fileURLToPath } from "url";
 
@@ -22,23 +22,9 @@ if (!PASSPHRASE) {
 
 const OUTPUT_DIR = process.argv[2] || join(__dirname, "..", "out");
 
-// PBKDF2 key derivation (same as PageCrypt)
+// PBKDF2-SHA256 key derivation (matches the browser Web Crypto unlock script)
 function deriveKey(passphrase, salt) {
-  const key = createHash("sha256")
-    .update(passphrase)
-    .update(salt)
-    .digest();
-  // Run PBKDF2-SHA256 for 10000 iterations
-  let dk = key;
-  const enc = new TextEncoder();
-  for (let i = 0; i < 10000; i++) {
-    dk = createHash("sha256")
-      .update(dk)
-      .update(salt)
-      .update(enc.encode(String(i)))
-      .digest();
-  }
-  return dk;
+  return pbkdf2Sync(passphrase, salt, 10000, 32, "sha256");
 }
 
 function encrypt(plaintext, passphrase) {
