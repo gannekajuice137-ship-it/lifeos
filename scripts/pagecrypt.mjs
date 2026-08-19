@@ -149,6 +149,7 @@ function encryptFile(filePath) {
     button:active { transform: scale(0.97); background: #0077ed; }
     button:disabled { opacity: 0.5; cursor: not-allowed; }
     .error { color: #ff453a; font-size: 0.8rem; margin-top: 0.5rem; }
+    .forget-link { display: block; margin-top: 0.75rem; font-size: 0.8rem; color: #9a9aa2; text-decoration: underline; cursor: pointer; }
     @media (prefers-color-scheme: light) {
       body { background: #f2f2f5; color: #1d1d1f; }
       body::before { background: rgba(0,113,227,0.12); }
@@ -175,8 +176,12 @@ function encryptFile(filePath) {
     <form id="unlock-form">
       <input type="password" id="passphrase" placeholder="Passphrase" autofocus autocomplete="off" />
       <button type="submit" id="unlock-btn">Unlock</button>
+      <label style="display:flex;align-items:center;gap:0.4rem;margin-top:0.7rem;font-size:0.8rem;color:#9a9aa2;cursor:pointer;">
+        <input type="checkbox" id="remember" checked style="margin:0;" /> Remember on this device
+      </label>
     </form>
     <p class="error" id="error"></p>
+    <a class="forget-link" id="forget">Use a different passphrase</a>
   </div>
 
   <script>
@@ -226,29 +231,50 @@ function encryptFile(filePath) {
       });
     }
 
-    document.getElementById("unlock-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      var passphrase = document.getElementById("passphrase").value;
-      var btn = document.getElementById("unlock-btn");
+    function setError(msg) {
       var err = document.getElementById("error");
+      if (err) err.textContent = msg || "";
+    }
 
+    function attempt(passphrase) {
+      var btn = document.getElementById("unlock-btn");
       if (!passphrase) return;
-
-      btn.disabled = true;
-      btn.textContent = "Decrypting...";
-      err.textContent = "";
-
-      decrypt(encrypted, passphrase).then(function(html) {
-        // Replace entire page with decrypted HTML
+      if (btn) { btn.disabled = true; btn.textContent = "Decrypting..."; }
+      setError("");
+      return decrypt(encrypted, passphrase).then(function(html) {
+        if (document.getElementById("remember") && document.getElementById("remember").checked) {
+          try { localStorage.setItem("lifeos_site_pass", passphrase); } catch (e) {}
+        }
         document.open();
         document.write(html);
         document.close();
       }).catch(function() {
-        err.textContent = ERROR_MSG;
-        btn.disabled = false;
-        btn.textContent = "Unlock";
+        if (btn) { btn.disabled = false; btn.textContent = "Unlock"; }
+        setError(ERROR_MSG);
+        try { localStorage.removeItem("lifeos_site_pass"); } catch (e) {}
       });
+    }
+
+    document.getElementById("unlock-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+      attempt(document.getElementById("passphrase").value);
     });
+
+    var forget = document.getElementById("forget");
+    if (forget) forget.addEventListener("click", function() {
+      try { localStorage.removeItem("lifeos_site_pass"); } catch (e) {}
+      document.getElementById("passphrase").value = "";
+      setError("");
+      document.getElementById("passphrase").focus();
+    });
+
+    // Auto-unlock if a remembered passphrase exists
+    var saved = null;
+    try { saved = localStorage.getItem("lifeos_site_pass"); } catch (e) {}
+    if (saved) {
+      document.getElementById("passphrase").value = saved;
+      attempt(saved);
+    }
   })();
   </script>
 </body>
