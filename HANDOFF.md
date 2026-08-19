@@ -82,7 +82,7 @@ A **private, single-user** personal web app called **Life OS** with 6 modules. T
 
 ### Build / Deploy
 - [x] PageCrypt post-build script (`scripts/pagecrypt.mjs`) — dark console unlock shell
-- [x] **Hosting: Cloudflare Pages** (free plan — GitHub Pages is Pro-only for private repos; branch protection likewise). GitHub Actions workflow was removed after this decision (would fail on every push). `npm run build:deploy` = `next build` + pagecrypt, output dir `out`
+- [x] **Hosting: GitHub Pages — LIVE** at https://gannekajuice137-ship-it.github.io/lifeos/ (repo made public by owner; free plan allows Pages on public repos). Workflow `.github/workflows/deploy.yml`: checkout@v7, setup-node@v7 (Node 22), npm ci → build (NEXT_PUBLIC_* secrets wired explicitly into build env — **GitHub does NOT auto-inject NEXT_PUBLIC_* secrets**; missing them caused `supabaseUrl is required` at prerender) → pagecrypt → configure-pages@v6 → upload-pages-artifact@v5 → deploy-pages@v5. `basePath: '/lifeos'` set in next.config.ts (required for project sites). Deploy run: ✅ success, all routes 200, ciphertext verified (no app markup leaks)
 - [x] **Repo `gannekajuice137-ship-it/lifeos` created + pushed (private)** — `.env.local` correctly excluded; `.gitignore` verified
 - [x] GitHub Actions secrets were set (URL, anon key, `PAGECRYPT_PASSPHRASE`) — now unused, harmless
 - [x] **PageCrypt passphrase saved at `C:\Users\shahd\lifeos-pagecrypt-passphrase.txt`** (also the CF Pages env var)
@@ -103,7 +103,7 @@ A **private, single-user** personal web app called **Life OS** with 6 modules. T
 
 > **GATE page removed** (owner request, 2026-08-18): `src/app/gate/` deleted, nav item + route wash dropped, `/gate` returns 404. The `gate_topics` table + `db.ts` gate functions + types are intentionally left in place — the table stays in Supabase (RLS-protected, empty) in case the tracker comes back.
 
-- [ ] **Cloudflare Pages deployment** — repo pushed; owner steps remaining: create CF account → connect GitHub → create Pages project (`lifeos`) → build command `npm run build:deploy`, output `out`, env vars (`NODE_VERSION=22`, `PAGECRYPT_PASSPHRASE`, `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`) → first deploy at `https://lifeos.pages.dev`
+- [ ] ~~Cloudflare Pages~~ — abandoned; owner chose GitHub Actions. Deployed via GitHub Pages (see above). Site passphrase: `C:\Users\shahd\lifeos-pagecrypt-passphrase.txt` (also in the Actions secret `PAGECRYPT_PASSPHRASE`)
 - [ ] **Branch protection: unavailable on GitHub free plan for private repos** (required-PR + force-push-block are Pro). Documented limitation; revisit if upgrading
 - [ ] **Export-my-data feature** — download all decrypted data as JSON + images zip (JSZip is installed)
 - [ ] **Full Motion/Framer Motion spring animations** — only basic `:active` scale feedback so far
@@ -194,7 +194,7 @@ Deploy build locally: `npm run build:deploy` (requires `PAGECRYPT_PASSPHRASE` en
 | `/wiki` functionality | ✅ Built (category icons redesigned) |
 | `/people` functionality | ✅ Built |
 | Design compliance | ✅ Dark Console built; Motion spring pass still pending |
-| Ops (build, encrypt, deploy) | ✅ Working; hosting switched to Cloudflare Pages; needs CF project + first run |
+| Ops (build, encrypt, deploy) | ✅ **LIVE on GitHub Pages** — deploy run green, ciphertext verified on every route |
 | Export-my-data | ❌ Not built |
 | Image attach UI in Notes/Wiki | ❌ Pipeline built, UI not wired |
 
