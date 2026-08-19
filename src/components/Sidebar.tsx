@@ -41,13 +41,15 @@ export default function Sidebar() {
 
   return (
     <nav className="sidebar">
+      {/* Logo - minimal, clean */}
       <div className="sidebar-logo">
         <span className="logo-mark">
           <AtomIcon />
         </span>
-        LifeOS
+        <span style={{ fontWeight: 600, letterSpacing: "-0.01em" }}>Life OS</span>
       </div>
 
+      {/* Navigation - primary actions */}
       <div className="sidebar-nav">
         {NAV_ITEMS.map((item) => {
           const Icon = item.icon;
@@ -58,33 +60,42 @@ export default function Sidebar() {
               href={item.href}
               className={`sidebar-link ${isActive ? "active" : ""}`}
               style={{ "--nav-accent": item.accent } as CSSProperties}
+              tabIndex={isActive ? undefined : 0}
             >
               <Icon className="icon" />
-              {item.label}
+              <span style={{ flex: 1 }}>{item.label}</span>
             </Link>
           );
         })}
       </div>
 
+      {/* Divider - subtle separator */}
       <div className="sidebar-divider" />
 
+      {/* Footer - secondary actions (Theme, Lock) */}
       <div className="sidebar-footer">
         <button
           className="sidebar-link"
           onClick={toggleTheme}
           aria-label="Toggle theme"
+          type="button"
         >
           {isDark ? (
             <SunIcon className="icon" />
           ) : (
             <MoonIcon className="icon" />
           )}
-          Theme
+          <span style={{ flex: 1 }}>{isDark ? "Light Mode" : "Dark Mode"}</span>
         </button>
 
-        <button className="sidebar-link" onClick={lock} aria-label="Lock app">
+        <button 
+          className="sidebar-link" 
+          onClick={lock} 
+          aria-label="Lock app"
+          type="button"
+        >
           <LockIcon className="icon" />
-          Lock
+          <span style={{ flex: 1 }}>Lock</span>
         </button>
       </div>
     </nav>
