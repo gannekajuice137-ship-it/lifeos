@@ -130,15 +130,17 @@ export default function UnlockScreen() {
   return (
     <div className="unlock-screen">
       <div className="unlock-card">
-        <div className="unlock-icon">
-          <LockIcon />
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: "var(--space-6)" }}>
+          <span className="logo-mark" style={{ width: 48, height: 48 }}>
+            <LockIcon />
+          </span>
         </div>
 
         {step === "login" && (
           <>
             <h1 className="unlock-title">Life OS</h1>
             <p className="unlock-subtitle">Sign in to continue</p>
-            <form className="unlock-form" onSubmit={handleLogin}>
+            <form className="unlock-form" onSubmit={handleLogin} style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
               <input
                 type="email"
                 className="input"
@@ -161,7 +163,7 @@ export default function UnlockScreen() {
                 {loading ? "Signing in..." : "Sign In"}
               </button>
             </form>
-            {error && <p className="unlock-error">{error}</p>}
+            {error && <p className="unlock-error" style={{ color: "var(--error)", fontSize: "var(--text-sm)", textAlign: "center", marginTop: "var(--space-3)" }}>{error}</p>}
           </>
         )}
 
@@ -169,7 +171,7 @@ export default function UnlockScreen() {
           <>
             <h1 className="unlock-title">Unlock</h1>
             <p className="unlock-subtitle">Enter your encryption passphrase</p>
-            <form className="unlock-form" onSubmit={handlePassphrase}>
+            <form className="unlock-form" onSubmit={handlePassphrase} style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
               <input
                 type="password"
                 className="input"
@@ -186,12 +188,11 @@ export default function UnlockScreen() {
                 type="button"
                 className="btn btn-ghost"
                 onClick={() => setStep("recovery")}
-                style={{ marginTop: "var(--space-2)" }}
               >
                 Use recovery key instead
               </button>
             </form>
-            {error && <p className="unlock-error">{error}</p>}
+            {error && <p className="unlock-error" style={{ color: "var(--error)", fontSize: "var(--text-sm)", textAlign: "center", marginTop: "var(--space-3)" }}>{error}</p>}
           </>
         )}
 
@@ -199,7 +200,7 @@ export default function UnlockScreen() {
           <>
             <h1 className="unlock-title">Recovery Key</h1>
             <p className="unlock-subtitle">Enter your recovery key to unlock</p>
-            <form className="unlock-form" onSubmit={handleRecoveryKeyLogin}>
+            <form className="unlock-form" onSubmit={handleRecoveryKeyLogin} style={{ display: "flex", flexDirection: "column", gap: "var(--space-3)" }}>
               <input
                 type="text"
                 className="input"
@@ -217,12 +218,11 @@ export default function UnlockScreen() {
                 type="button"
                 className="btn btn-ghost"
                 onClick={() => setStep("passphrase")}
-                style={{ marginTop: "var(--space-2)" }}
               >
                 Back to passphrase
               </button>
             </form>
-            {error && <p className="unlock-error">{error}</p>}
+            {error && <p className="unlock-error" style={{ color: "var(--error)", fontSize: "var(--text-sm)", textAlign: "center", marginTop: "var(--space-3)" }}>{error}</p>}
           </>
         )}
 
@@ -239,10 +239,11 @@ export default function UnlockScreen() {
                 borderRadius: "var(--radius-md)",
                 padding: "var(--space-4)",
                 fontFamily: "var(--font-mono)",
-                fontSize: "var(--text-sm)",
+                fontSize: "var(--text-xs)",
                 wordBreak: "break-all",
                 marginBottom: "var(--space-4)",
                 userSelect: "all",
+                border: "1px solid var(--border)",
               }}
             >
               {newRecoveryKey}
