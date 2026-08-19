@@ -1,15 +1,50 @@
-# dependencies
-/node_modules
+```
+# Dependencies
+node_modules/
 
-# next.js
-/.next/
-/out/
+# Build outputs
+.next/
+dist/
+build/
+out/
 
-# env — NEVER commit real keys
-.env*.local
-.env
+# Environment variables
+.env*
+!.env.example
 
-# misc
+# Logs
+*.log
+
+# OS generated files
 .DS_Store
-*.pem
-npm-debug.log*
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.log
+.git/modules/
+.DS_Store
+Thumbs.db
+```
